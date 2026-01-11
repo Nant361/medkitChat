@@ -1,0 +1,17 @@
+{
+  "name": "telemed-chat",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm --workspace server run dev\" \"wait-on tcp:3001 --timeout 30000 && npm --workspace client run dev\"",
+    "build": "npm --workspace client run build",
+    "start": "npm --workspace server run start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0"
+  }
+}
