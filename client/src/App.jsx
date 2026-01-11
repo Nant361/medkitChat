@@ -23,6 +23,24 @@ const POLL_INTERVAL_MS = 4000;
 const STORAGE_KEY = 'medikit-chat-auth';
 const DOWNLOAD_URL =
   'https://drive.google.com/file/d/1DRZQQLs6eP9tcdKWTfeCL6BI6P4SecMO/view?usp=sharing';
+const DEMO_CREDENTIALS = {
+  doctors: [
+    { username: 'drmaya', password: 'dokter123' },
+    { username: 'drandi', password: 'dokter123' },
+    { username: 'drsiti', password: 'dokter123' },
+    { username: 'drrafi', password: 'dokter123' },
+    { username: 'drnia', password: 'dokter123' },
+    { username: 'drbudi', password: 'dokter123' },
+    { username: 'drintan', password: 'dokter123' },
+    { username: 'drdimas', password: 'dokter123' },
+    { username: 'drlaila', password: 'dokter123' },
+    { username: 'drrizky', password: 'dokter123' }
+  ],
+  patients: [
+    { username: 'ayu', password: 'pasien123' },
+    { username: 'bima', password: 'pasien123' }
+  ]
+};
 
 function readStoredAuth() {
   if (typeof window === 'undefined') return null;
@@ -79,6 +97,7 @@ function App() {
   const [doctorChoiceId, setDoctorChoiceId] = useState('');
   const [usersLoaded, setUsersLoaded] = useState(false);
   const [showStartupPrompt, setShowStartupPrompt] = useState(true);
+  const [showDemoCredentials, setShowDemoCredentials] = useState(false);
 
   const activeIdRef = useRef(activeId);
   const consultationsRef = useRef(consultations);
@@ -702,6 +721,43 @@ function App() {
               AI hanya memberi edukasi umum. Keputusan medis tetap oleh dokter.
             </div>
           </>
+        )}
+        <div className="demo-credentials-toggle">
+          <button
+            type="button"
+            className="btn ghost small"
+            onClick={() => setShowDemoCredentials((prev) => !prev)}
+          >
+            {showDemoCredentials ? 'Sembunyikan kredensial demo' : 'Lihat kredensial demo'}
+          </button>
+        </div>
+        {showDemoCredentials && (
+          <div className="demo-credentials">
+            <div className="demo-group">
+              <h4>Dokter</h4>
+              <ul>
+                {DEMO_CREDENTIALS.doctors.map((doctor) => (
+                  <li key={doctor.username}>
+                    <span className="demo-user">{doctor.username}</span>
+                    <span className="demo-separator">/</span>
+                    <span className="demo-pass">{doctor.password}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="demo-group">
+              <h4>Pasien</h4>
+              <ul>
+                {DEMO_CREDENTIALS.patients.map((patient) => (
+                  <li key={patient.username}>
+                    <span className="demo-user">{patient.username}</span>
+                    <span className="demo-separator">/</span>
+                    <span className="demo-pass">{patient.password}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         )}
       </section>
     </div>

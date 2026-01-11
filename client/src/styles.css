@@ -146,6 +146,63 @@ body::before {
   padding-top: 12px;
 }
 
+.demo-credentials-toggle {
+  margin-top: 8px;
+}
+
+.demo-credentials-toggle .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.demo-credentials {
+  margin-top: 12px;
+  border-top: 1px dashed var(--border);
+  padding-top: 12px;
+  display: grid;
+  gap: 12px;
+}
+
+.demo-group h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+}
+
+.demo-group ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.demo-group li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #f9fdfc;
+  font-size: 13px;
+}
+
+.demo-user {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.demo-separator {
+  color: var(--muted);
+}
+
+.demo-pass {
+  color: var(--accent-strong);
+}
+
 .role-choice {
   display: grid;
   gap: 12px;
