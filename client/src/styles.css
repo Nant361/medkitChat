@@ -567,6 +567,75 @@ body::before {
   font-size: 15px;
 }
 
+.startup-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(12, 38, 40, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 20;
+}
+
+.startup-modal {
+  width: min(560px, 100%);
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  display: grid;
+  gap: 14px;
+  box-shadow: var(--shadow);
+  animation: fadeUp 0.4s ease both;
+}
+
+.startup-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(11, 114, 133, 0.12);
+  color: var(--accent-strong);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.startup-modal h2 {
+  margin: 0;
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+}
+
+.startup-modal p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.startup-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.startup-actions .btn {
+  flex: 1 1 180px;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.startup-note {
+  font-size: 12px;
+  color: var(--muted);
+}
+
 @keyframes floatIn {
   from {
     opacity: 0;

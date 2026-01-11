@@ -21,6 +21,8 @@ const ROLE_LABELS = {
 
 const POLL_INTERVAL_MS = 4000;
 const STORAGE_KEY = 'medikit-chat-auth';
+const DOWNLOAD_URL =
+  'https://drive.google.com/file/d/1DRZQQLs6eP9tcdKWTfeCL6BI6P4SecMO/view?usp=sharing';
 
 function readStoredAuth() {
   if (typeof window === 'undefined') return null;
@@ -76,6 +78,7 @@ function App() {
   const [isBusy, setIsBusy] = useState(false);
   const [doctorChoiceId, setDoctorChoiceId] = useState('');
   const [usersLoaded, setUsersLoaded] = useState(false);
+  const [showStartupPrompt, setShowStartupPrompt] = useState(true);
 
   const activeIdRef = useRef(activeId);
   const consultationsRef = useRef(consultations);
@@ -508,6 +511,15 @@ function App() {
     clearStoredAuth();
   }
 
+  function handleContinueDemo() {
+    setShowStartupPrompt(false);
+  }
+
+  function handleDownloadProject() {
+    setShowStartupPrompt(false);
+    window.location.href = DOWNLOAD_URL;
+  }
+
   function renderMessageLabel(message) {
     if (message.senderRole === 'ai') return 'Jawaban AI';
     if (message.senderRole === 'doctor') return 'Jawaban Resmi Dokter';
@@ -523,181 +535,177 @@ function App() {
   const canSignUp = loginRole === 'patient';
   const showLoginForm = loginMode === 'login' || !canSignUp;
 
-  if (!isAuthenticated) {
-    return (
-      <div className="login">
-        <section className="login-panel">
-          <div className="brand">
-            <div className="brand-mark">+</div>
-            <div>
-              <h1>Medikit Chat</h1>
-              <p>AI edukasi awal, keputusan tetap dokter</p>
-            </div>
+  const page = !isAuthenticated ? (
+    <div className="login">
+      <section className="login-panel">
+        <div className="brand">
+          <div className="brand-mark">+</div>
+          <div>
+            <h1>Medikit Chat</h1>
+            <p>AI edukasi awal, keputusan tetap dokter</p>
           </div>
-          <h2>Mulai konsultasi jarak jauh dengan pendamping edukasi awal.</h2>
-          <p>
-            Pasien bisa meminta edukasi awal dari AI sebelum dokter memberikan keputusan medis
-            resmi. Semua riwayat percakapan tersimpan aman untuk kebutuhan konsultasi.
-          </p>
-          <div className="login-highlights">
-            <div className="highlight">
-              <h3>AI Opsional</h3>
-              <p>Memberikan edukasi awal, bukan diagnosis.</p>
-            </div>
-            <div className="highlight">
-              <h3>Dokter Pusat Keputusan</h3>
-              <p>Jawaban akhir tetap oleh dokter/tenaga medis.</p>
-            </div>
-            <div className="highlight">
-              <h3>Riwayat Tersimpan</h3>
-              <p>Dokumentasi konsultasi tercatat untuk tindak lanjut.</p>
-            </div>
+        </div>
+        <h2>Mulai konsultasi jarak jauh dengan pendamping edukasi awal.</h2>
+        <p>
+          Pasien bisa meminta edukasi awal dari AI sebelum dokter memberikan keputusan medis
+          resmi. Semua riwayat percakapan tersimpan aman untuk kebutuhan konsultasi.
+        </p>
+        <div className="login-highlights">
+          <div className="highlight">
+            <h3>AI Opsional</h3>
+            <p>Memberikan edukasi awal, bukan diagnosis.</p>
           </div>
-        </section>
+          <div className="highlight">
+            <h3>Dokter Pusat Keputusan</h3>
+            <p>Jawaban akhir tetap oleh dokter/tenaga medis.</p>
+          </div>
+          <div className="highlight">
+            <h3>Riwayat Tersimpan</h3>
+            <p>Dokumentasi konsultasi tercatat untuk tindak lanjut.</p>
+          </div>
+        </div>
+      </section>
 
-        <section className="login-card">
-          {!loginRole ? (
-            <>
-              <h2>Pilih peran</h2>
-              <p>Pilih peran untuk masuk ke halaman login.</p>
-              <div className="role-choice">
-                <button
-                  type="button"
-                  className="role-choice-card"
-                  onClick={() => handleRolePick('patient')}
-                >
-                  <div className="role-choice-tag">Pasien</div>
-                  <h3>Masuk sebagai pasien</h3>
-                  <p>Mulai konsultasi, minta edukasi AI, dan pilih dokter tujuan.</p>
-                </button>
-                <button
-                  type="button"
-                  className="role-choice-card"
-                  onClick={() => handleRolePick('doctor')}
-                >
-                  <div className="role-choice-tag">Dokter</div>
-                  <h3>Masuk sebagai dokter</h3>
-                  <p>Kelola konsultasi pasien dan kirim jawaban resmi.</p>
-                </button>
+      <section className="login-card">
+        {!loginRole ? (
+          <>
+            <h2>Pilih peran</h2>
+            <p>Pilih peran untuk masuk ke halaman login.</p>
+            <div className="role-choice">
+              <button
+                type="button"
+                className="role-choice-card"
+                onClick={() => handleRolePick('patient')}
+              >
+                <div className="role-choice-tag">Pasien</div>
+                <h3>Masuk sebagai pasien</h3>
+                <p>Mulai konsultasi, minta edukasi AI, dan pilih dokter tujuan.</p>
+              </button>
+              <button
+                type="button"
+                className="role-choice-card"
+                onClick={() => handleRolePick('doctor')}
+              >
+                <div className="role-choice-tag">Dokter</div>
+                <h3>Masuk sebagai dokter</h3>
+                <p>Kelola konsultasi pasien dan kirim jawaban resmi.</p>
+              </button>
+            </div>
+            <div className="login-note">
+              AI hanya memberi edukasi umum. Keputusan medis tetap oleh dokter.
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="login-head">
+              <div className="login-role">
+                <div className="role-chip">{ROLE_LABELS[loginRole]}</div>
+                <span>Masuk sebagai {ROLE_LABELS[loginRole]}</span>
               </div>
-              <div className="login-note">
-                AI hanya memberi edukasi umum. Keputusan medis tetap oleh dokter.
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="login-head">
-                <div className="login-role">
-                  <div className="role-chip">{ROLE_LABELS[loginRole]}</div>
-                  <span>Masuk sebagai {ROLE_LABELS[loginRole]}</span>
-                </div>
-                <button type="button" className="btn ghost small" onClick={handleRoleReset}>
-                  Ganti peran
-                </button>
-              </div>
+              <button type="button" className="btn ghost small" onClick={handleRoleReset}>
+                Ganti peran
+              </button>
+            </div>
 
-              {canSignUp && (
-                <div className="role-toggle mode-toggle">
-                  {[
-                    { key: 'login', label: 'Masuk' },
-                    { key: 'signup', label: 'Daftar' }
-                  ].map((item) => (
-                    <button
-                      key={item.key}
-                      className={loginMode === item.key ? 'active' : ''}
-                      onClick={() => {
-                        setLoginMode(item.key);
-                        setStatusMessage('');
-                      }}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {showLoginForm ? (
-                <>
-                  <h2>{loginRole === 'doctor' ? 'Masuk Dokter' : 'Masuk'}</h2>
-                  <p>
-                    {loginRole === 'doctor'
-                      ? 'Gunakan akun dokter yang sudah terdaftar.'
-                      : 'Masukkan username dan password untuk masuk ke ruang konsultasi.'}
-                  </p>
-                  <div className="field">
-                    <label>Username</label>
-                    <input
-                      type="text"
-                      value={loginUsername}
-                      onChange={(event) => setLoginUsername(event.target.value)}
-                      placeholder="Masukkan username"
-                      autoComplete="username"
-                    />
-                  </div>
-                  <div className="field">
-                    <label>Password</label>
-                    <input
-                      type="password"
-                      value={loginPassword}
-                      onChange={(event) => setLoginPassword(event.target.value)}
-                      placeholder="Masukkan password"
-                      autoComplete="current-password"
-                    />
-                  </div>
-                  {statusMessage && <div className="banner">{statusMessage}</div>}
+            {canSignUp && (
+              <div className="role-toggle mode-toggle">
+                {[
+                  { key: 'login', label: 'Masuk' },
+                  { key: 'signup', label: 'Daftar' }
+                ].map((item) => (
                   <button
-                    className="btn primary"
-                    onClick={handleLogin}
-                    disabled={isBusy || !loginUsername.trim() || !loginPassword}
+                    key={item.key}
+                    className={loginMode === item.key ? 'active' : ''}
+                    onClick={() => {
+                      setLoginMode(item.key);
+                      setStatusMessage('');
+                    }}
                   >
-                    Masuk ke dashboard
+                    {item.label}
                   </button>
-                </>
-              ) : (
-                <>
-                  <h2>Daftar</h2>
-                  <p>Buat akun pasien dengan username dan password.</p>
-                  <div className="field">
-                    <label>Username</label>
-                    <input
-                      type="text"
-                      value={signUpUsername}
-                      onChange={(event) => setSignUpUsername(event.target.value)}
-                      placeholder="Buat username"
-                      autoComplete="username"
-                    />
-                  </div>
-                  <div className="field">
-                    <label>Password</label>
-                    <input
-                      type="password"
-                      value={signUpPassword}
-                      onChange={(event) => setSignUpPassword(event.target.value)}
-                      placeholder="Buat password"
-                      autoComplete="new-password"
-                    />
-                  </div>
-                  {statusMessage && <div className="banner">{statusMessage}</div>}
-                  <button
-                    className="btn primary"
-                    onClick={handleSignUp}
-                    disabled={isBusy || !signUpUsername.trim() || !signUpPassword}
-                  >
-                    Daftar dan masuk
-                  </button>
-                </>
-              )}
-              <div className="login-note">
-                AI hanya memberi edukasi umum. Keputusan medis tetap oleh dokter.
+                ))}
               </div>
-            </>
-          )}
-        </section>
-      </div>
-    );
-  }
+            )}
 
-  return (
+            {showLoginForm ? (
+              <>
+                <h2>{loginRole === 'doctor' ? 'Masuk Dokter' : 'Masuk'}</h2>
+                <p>
+                  {loginRole === 'doctor'
+                    ? 'Gunakan akun dokter yang sudah terdaftar.'
+                    : 'Masukkan username dan password untuk masuk ke ruang konsultasi.'}
+                </p>
+                <div className="field">
+                  <label>Username</label>
+                  <input
+                    type="text"
+                    value={loginUsername}
+                    onChange={(event) => setLoginUsername(event.target.value)}
+                    placeholder="Masukkan username"
+                    autoComplete="username"
+                  />
+                </div>
+                <div className="field">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    value={loginPassword}
+                    onChange={(event) => setLoginPassword(event.target.value)}
+                    placeholder="Masukkan password"
+                    autoComplete="current-password"
+                  />
+                </div>
+                {statusMessage && <div className="banner">{statusMessage}</div>}
+                <button
+                  className="btn primary"
+                  onClick={handleLogin}
+                  disabled={isBusy || !loginUsername.trim() || !loginPassword}
+                >
+                  Masuk ke dashboard
+                </button>
+              </>
+            ) : (
+              <>
+                <h2>Daftar</h2>
+                <p>Buat akun pasien dengan username dan password.</p>
+                <div className="field">
+                  <label>Username</label>
+                  <input
+                    type="text"
+                    value={signUpUsername}
+                    onChange={(event) => setSignUpUsername(event.target.value)}
+                    placeholder="Buat username"
+                    autoComplete="username"
+                  />
+                </div>
+                <div className="field">
+                  <label>Password</label>
+                  <input
+                    type="password"
+                    value={signUpPassword}
+                    onChange={(event) => setSignUpPassword(event.target.value)}
+                    placeholder="Buat password"
+                    autoComplete="new-password"
+                  />
+                </div>
+                {statusMessage && <div className="banner">{statusMessage}</div>}
+                <button
+                  className="btn primary"
+                  onClick={handleSignUp}
+                  disabled={isBusy || !signUpUsername.trim() || !signUpPassword}
+                >
+                  Daftar dan masuk
+                </button>
+              </>
+            )}
+            <div className="login-note">
+              AI hanya memberi edukasi umum. Keputusan medis tetap oleh dokter.
+            </div>
+          </>
+        )}
+      </section>
+    </div>
+  ) : (
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
@@ -877,6 +885,32 @@ function App() {
         )}
       </main>
     </div>
+  );
+
+  return (
+    <>
+      {showStartupPrompt && (
+        <div className="startup-overlay" role="dialog" aria-modal="true" aria-labelledby="startup-title">
+          <div className="startup-modal">
+            <div className="startup-tag">Medikit Chat</div>
+            <h2 id="startup-title">Mulai dengan cepat</h2>
+            <p>Ingin download project ini atau langsung lanjutkan demo aplikasinya?</p>
+            <div className="startup-actions">
+              <button type="button" className="btn primary" onClick={handleContinueDemo}>
+                Lanjutkan demo
+              </button>
+              <button type="button" className="btn ghost" onClick={handleDownloadProject}>
+                Download this project
+              </button>
+            </div>
+            <div className="startup-note">
+              Download akan membuka Google Drive di tab yang sama.
+            </div>
+          </div>
+        </div>
+      )}
+      {page}
+    </>
   );
 }
 
